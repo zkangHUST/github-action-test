@@ -17,7 +17,7 @@ jobs:
         uses: jwlawson/actions-setup-cmake@v2
         with:
           cmake-version: '3.28.1'
-          cmake-architecture: x64
+          use-32bit: false
 
       # 3. 配置项目
       - name: Configure
