@@ -1,17 +1,11 @@
-name: Build Hello World
+name: Build Hello World (Manual)
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest]
+  build-windows:
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -19,6 +13,9 @@ jobs:
 
       - name: Install CMake
         uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.28.1'
+          cmake-architecture: x64
 
       - name: Configure
         run: cmake -B build -A x64
@@ -29,7 +26,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: hello-${{ matrix.os }}
-          path: |
-            build/hello       # Linux / macOS
-            build/Release/hello.exe  # Windows
+          name: hello-windows
+          path: build/Release/hello.exe
