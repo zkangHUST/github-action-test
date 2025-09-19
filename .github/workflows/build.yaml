@@ -1,30 +1,36 @@
-name: Build Hello World (Manual)
+name: Build and Release Hello World
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:   # 手动触发
 
 jobs:
-  build-windows:
+  build-and-release:
     runs-on: windows-latest
 
     steps:
+      # 1. 拉取代码
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. 安装指定版本 CMake
       - name: Install CMake
         uses: jwlawson/actions-setup-cmake@v2
         with:
           cmake-version: '3.28.1'
           cmake-architecture: x64
 
+      # 3. 配置项目
       - name: Configure
         run: cmake -B build -A x64
 
+      # 4. 编译
       - name: Build
         run: cmake --build build --config Release
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      # 5. 上传到 GitHub Release
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
         with:
-          name: hello-windows
-          path: build/Release/hello.exe
+          tag: v1.0.0                   # Release 的标签
+          name: Release v1.0.0          # Release 名称
+          files: build/Release/hello.exe  # 上传文件路径
